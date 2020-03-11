@@ -26,17 +26,21 @@ SECRET_KEY = '5z+8-43+^-mf^qh8tln6*cg!st#z1!9=^q#=ku88y#41trj2@x'
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
+IMPORT_EXPORT_USE_TRANSACTIONS = False
 
 # Application definition
 
 INSTALLED_APPS = [
     'django.contrib.admin',
+    'login.apps.LoginConfig',
+    'dash.apps.DashConfig',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'crispy_forms',
+    'import_export',
 ]
 
 MIDDLEWARE = [
@@ -118,3 +122,23 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# This is for saving media files like images / profile pictures
+MEDIA_ROOT = os.path.join( BASE_DIR, 'Media')
+MEDIA_URL = '/Media/'
+# This is used for --> we are to crispy forms to  use bootstrap4 instead of bootstrap2
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+# This is for login redirect
+LOGIN_REDIRECT_URL = 'dash-home'
+LOGIN_URL = 'login'
+# This is for email config
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.environ.get('EMAIL_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASS')
+
+
+
+
