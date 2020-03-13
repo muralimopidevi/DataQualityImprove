@@ -20,7 +20,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '5z+8-43+^-mf^qh8tln6*cg!st#z1!9=^q#=ku88y#41trj2@x'
+#SECRET_KEY = '5z+8-43+^-mf^qh8tln6*cg!st#z1!9=^q#=ku88y#41trj2@x'
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -122,6 +123,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 STATIC_ROOT = os.path.join( BASE_DIR, 'staticfiles')
+
 STATIC_URL = '/static/'
 
 # This is for saving media files like images / profile pictures
