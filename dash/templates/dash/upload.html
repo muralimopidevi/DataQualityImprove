@@ -1,0 +1,18 @@
+{% extends "dash/dash-base-temp.html" %}
+{% block content %}
+
+<h2>Upload new file</h2>
+<div class="form-horizontal form-inline">
+  <form method="POST" enctype="multipart/form-data" >
+  {% csrf_token %}
+    <div class="fileUpload btn btn-primary">
+      <span>Upload new file</span>
+      <div>
+          <input type="file" name="docfile" required="True" class="upload" onchange="javascript:this.form.submit();">
+      </div>
+    </div>
+
+  </form>
+</div>
+
+{% endblock content %}

@@ -1,0 +1,118 @@
+{% extends "dash/dash-base-temp.html" %}
+    {% block content %}
+
+
+
+<section class="mbr-section mbr-section-hero mbr-section-full mbr-section-with-arrow mbr-parallax-background mbr-after-navbar" id="header1-1" data-rv-view="2" style="background-image: url(static/assets/images/header.jpg);">
+
+
+
+    <div class="mbr-table-cell">
+
+        <div class="container">
+            <div class="row">
+                <div class="mbr-section col-md-10 col-md-offset-1 text-xs-center">
+
+                    <h1 class="mbr-section-title display-1">WELCOME <br>TO&nbsp;<br> MACHINE LEARNING RDIUP</h1>
+                    <p class="mbr-section-lead lead">Provide us any dataset and we will help you to build a model and test the same dataset with better prediction capability. We will also see prediction done using new dataset. Main aim of this project to make a prototype for a actual Machine Learning model building portal.</p>
+                    <div class="mbr-section-btn"> <a class="btn btn-lg btn-white btn-white-outline" href="#msg-box8-3">GET STARTED</a></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</section>
+
+<section class="mbr-section article mbr-parallax-background" id="msg-box8-3" data-rv-view="8" style="background-image: url(static/assets/images/desert2.jpg); padding-top: 120px; padding-bottom: 120px;">
+
+    <div class="mbr-overlay" style="opacity: 0.5; background-color: rgb(34, 34, 34);">
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2 text-xs-center">
+                <h3 class="mbr-section-title display-2">STEPS TO BE FOLLOWED</h3>
+                <div class="lead"><p>Before doing any input in the forms, get yourself familiar with the steps to be followed and the type of dataset to be provided.</p></div>
+
+            </div>
+        </div>
+    </div>
+
+</section>
+
+<section class="mbr-cards mbr-section mbr-section-nopadding" id="features4-2" data-rv-view="5" style="background-color: rgb(255, 255, 255);">
+
+
+
+    <div class="mbr-cards-row row">
+        <div class="mbr-cards-col col-xs-12 col-lg-4" style="padding-top: 80px; padding-bottom: 80px;">
+            <div class="container">
+                <div class="card cart-block">
+                    <div class="card-img iconbox"><a class="etl-icon icon-edit mbr-iconfont mbr-iconfont-features4" style="color: black;"></a></div>
+                    <div class="card-block">
+                        <h4 class="card-title">TRAINING</h4>
+                        <p class="card-text">During training session you are required to provide the dataset and the target field column id. For example if the target variable is in third column then enter 3 as the input. By default 50% data is choosen for training a model. </p>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mbr-cards-col col-xs-12 col-lg-4" style="padding-top: 80px; padding-bottom: 80px;">
+            <div class="container">
+                <div class="card cart-block">
+                    <div class="card-img iconbox"><a class="etl-icon icon-phone mbr-iconfont mbr-iconfont-features4" style="color: black;"></a></div>
+                    <div class="card-block">
+                        <h4 class="card-title">TESTING</h4>
+                        <p class="card-text">Testing is basically prediction of same dataset and checking the differences in actual and predicted result from built model. Based on this we can check how far smart our model is. By default 50% of rest dataset from training dataset is used to check the result.</p>
+
+                    </div>
+                </div>
+          </div>
+        </div>
+        <div class="mbr-cards-col col-xs-12 col-lg-4" style="padding-top: 80px; padding-bottom: 80px;">
+            <div class="container">
+                <div class="card cart-block">
+                    <div class="card-img iconbox"><a class="etl-icon icon-briefcase mbr-iconfont mbr-iconfont-features4" style="color: black;"></a></div>
+                    <div class="card-block">
+                        <h4 class="card-title">PREDICTION</h4>
+                        <p class="card-text">For prediction session, we can use new dataset for prediction of result from built model. By default prediction of data from model is done in testing only for convenience purpose.</p>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+</section>
+
+    {% block body_block%}
+
+
+<h2>Select a file</h2>
+
+<form method="POST" action="." enctype="multipart/form-data" class="form-horizontal form-inline">
+{% csrf_token %}
+
+{% for i in listfiles %}
+  <div>
+    <button type="submit" name={{i}} class="fileUpload btn btn-primary">{{i}}</button>
+  </div>
+{% endfor %}
+</form>
+
+{% if fileselected %}
+
+<p></p>
+<h2>NEW PROJECT</h2>
+<p class="fileUpload">{{fileselected}}</p>
+
+{% endif %}
+
+
+{% endblock content %}
+
+
+
+

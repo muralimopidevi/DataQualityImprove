@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 from PIL import Image
+from django.db import models
+from dash.templates.dash.csvstore import OverwriteStorage
 
 
 class Profile(models.Model):
@@ -18,3 +20,21 @@ class Profile(models.Model):
             output_size = (600, 600)
             img.thumbnail(output_size)
             img.save(self.image.path)
+
+
+class DownloadedFile(models.Model):
+    docfile = models.FileField(storage=OverwriteStorage(), upload_to='CSV_FOLDER/')
+
+
+class CurrentFile(models.Model):
+    filename = models.CharField(max_length=300)
+
+
+class Prepross(models.Model):
+    filename = models.CharField(max_length=300)
+    coltype = models.CharField(max_length=300)
+    assvar = models.CharField(max_length=300)
+    missingvalues = models.CharField(max_length=300)
+    trainingset_size = models.IntegerField()
+    featscaling = models.CharField(max_length=300)
+    ordinal = models.CharField(max_length=300)

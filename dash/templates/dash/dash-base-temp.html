@@ -41,7 +41,7 @@
     <ul class="navbar-nav bg-dark sidebar sidebar-dark accordion" id="accordionSidebar">
 
       <!-- Sidebar - Brand -->
-      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{% url 'dash-home' %}">
+      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{% url 'upload' %}">
         <div class="sidebar-brand-icon ">
          <img src="{% static 'dash/images/logo.png' %}" class="img-thumbnail" />
         </div>
@@ -53,9 +53,9 @@
 
       <!-- Nav Item - Dashboard -->
       <li class="nav-item active">
-        <a class="nav-link" href="{% url 'dash-home' %}">
+        <a class="nav-link" href="{% url 'upload' %}">
           <i class="fas fa-fw fa-tachometer-alt"></i>
-          <span>Dashboard</span></a>
+          <span>Upload CSV</span></a>
       </li>
 
       <!-- Divider -->
@@ -81,9 +81,9 @@
       </li> -->
       <!-- Nav Item - Charts -->
       <li class="nav-item">
-        <a class="nav-link" href="#">
+        <a class="nav-link" href="{% url 'prepross' %}">
           <i class="fas fa-fw fa-chart-area"></i>
-          <span>Upload CSV</span></a>
+          <span>Preprocessing</span></a>
       </li>
 <hr class="sidebar-divider">
 

@@ -134,7 +134,7 @@ MEDIA_URL = '/Media/'
 # This is used for --> we are to crispy forms to  use bootstrap4 instead of bootstrap2
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 # This is for login redirect
-LOGIN_REDIRECT_URL = 'dash-home'
+LOGIN_REDIRECT_URL = 'upload'
 LOGIN_URL = 'login'
 # This is for email config
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
