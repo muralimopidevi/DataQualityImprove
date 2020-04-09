@@ -1,6 +1,8 @@
 from django import forms
 from django.contrib.auth.models import User
 from .models import Profile
+from django import forms
+from .models import CSV
 
 
 class UserUpdateForm(forms.ModelForm):
@@ -19,6 +21,11 @@ class ProfileUpdateForm(forms.ModelForm):
         model = Profile
         fields = ['image']
 
+
+class CSVForm(forms.ModelForm):
+    class Meta:
+        model = CSV
+        fields = ['title', 'pdf']
 
 
 

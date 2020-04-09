@@ -1,9 +1,10 @@
 import os
 import plotly.graph_objs as go
 import plotly.offline as opy
-from django.views.generic import TemplateView
-from dash.models import DownloadedFile, CurrentFile,Prepross
+from dash.models import CurrentFile,Prepross
 from django.shortcuts import render, redirect, reverse
+from django.views.generic import TemplateView, ListView, CreateView
+from django.urls import reverse_lazy
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.decorators import login_required
@@ -11,21 +12,18 @@ from .forms import UserUpdateForm, ProfileUpdateForm
 from django.contrib import messages
 from django.shortcuts import render
 import pandas as pd
+from .forms import CSVForm
+from .models import CSV
 
 
-class upload(TemplateView):
+
+
+
+class UploadBookView(CreateView):
+    model = CSV
+    form_class = CSVForm
+    success_url = reverse_lazy('index')
     template_name = 'dash/upload.html'
-
-    def post(self, request, **kwargs):
-        if request.method == 'POST' and request.FILES["docfile"]:
-
-            downloaded_file = DownloadedFile(docfile=request.FILES['docfile'])
-            downloaded_file.save()
-            downloaded_file.delete() # it deletes only from database
-            return render(request,'dash/upload.html')
-
-    def __str__(self):
-        return self.name
 
 
 class index(TemplateView):
@@ -35,15 +33,13 @@ class index(TemplateView):
         if request.method == 'POST':
             current_file = CurrentFile(filename = list(request.POST.keys())[1])
             current_file.save()
-            context = {}
-            #listfiles = os.listdir('media/downloaded')
-            context['fileselected'] = list(request.POST.keys())[1]
-            context['test'] = 'a'
-            #context['listfiles'] = listfiles
-            return render(request,'dash/index.html', context)
+            return redirect('prepross')
+        else:
+            return render(request, 'dash/index.html')
 
     def __str__(self):
-        return self.name
+        return self.template_name
+
 
 # *****************************DATA PREPROCESSING*********************************************
 
@@ -58,7 +54,7 @@ class prepross(TemplateView):
         try:
             # *****************************LOADING DATA FROM MODELS*************************************
             file_name = CurrentFile.objects.order_by('-id')[0].filename #it gets the uploaded filename from database
-            df = pd.read_csv(os.path.join('media\downloaded', file_name)) # it displays uploaded dataset from database
+            df = pd.read_csv(os.path.join('Media\csv', file_name)) # it displays uploaded dataset from database
             count_nan = len(df) - df.count() # it counts the number of missing values
             row_count = df.count()[0] #it counts the number of rows in the dataset
             file_type = pd.concat([df.dtypes, count_nan, df.nunique()], axis=1) #concat the total dataset https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.concat.html
@@ -79,12 +75,12 @@ class prepross(TemplateView):
             # Entry to model of the data preprocessing to post the requests
             # *****************************LOADING DATA FROM MODELS*************************************
             prep_file = Prepross.objects.get_or_create(filename = CurrentFile.objects.order_by('-id')[0].filename,
-                                  coltype = request.POST.getlist('coltype'),
-                                    assvar = request.POST.getlist('assvar'),
-                            missingvalues = request.POST.getlist('missingvalues'),
-                            trainingset_size = request.POST['trainingset_size'],
-                              featscaling = request.POST.getlist('featscaling'),
-                               ordinal =  request.POST.getlist('ordinal'),
+                                                       coltype = request.POST.getlist('coltype'),
+                                                       assvar = request.POST.getlist('assvar'),
+                                                       missingvalues = request.POST.getlist('missingvalues'),
+                                                       trainingset_size = request.POST['trainingset_size'],
+                                                       featscaling = request.POST.getlist('featscaling'),
+                                                       ordinal =  request.POST.getlist('ordinal'),
 
                                    )
 
@@ -95,7 +91,7 @@ class prepross(TemplateView):
             file_name = CurrentFile.objects.order_by('-id')[0].filename
             coltype = request.POST.getlist('coltype')
             coltype = dict([i.split(':', 1)for i in coltype])#which spilts the columns
-            df = pd.read_csv(os.path.join('dash\CSV_FOLDER', file_name), dtype= coltype)
+            df = pd.read_csv(os.path.join('Media\csv', file_name), dtype= coltype)
             row_count = df.count()[0]
 
             # Keep only selected columns

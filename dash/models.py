@@ -1,7 +1,6 @@
 from django.contrib.auth.models import User
 from PIL import Image
 from django.db import models
-from dash.csvstore import OverwriteStorage
 
 
 class Profile(models.Model):
@@ -21,8 +20,20 @@ class Profile(models.Model):
             img.save(self.image.path)
 
 
-class DownloadedFile(models.Model):
-    docfile = models.FileField(storage=OverwriteStorage(), upload_to='CSV_FOLDER/')
+class CSV(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    title = models.CharField(max_length=100)
+    pdf = models.FileField(upload_to='csv/')
+
+    def __str__(self):
+        return f'{self.title}CSV'
+
+    def save(self, *args, **kwargs):
+        super(CSV,self).save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        self.pdf.delete()
+        super().delete(*args, **kwargs)
 
 
 class CurrentFile(models.Model):
