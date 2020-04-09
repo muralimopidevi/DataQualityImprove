@@ -1,8 +1,7 @@
-from django.db import models
 from django.contrib.auth.models import User
 from PIL import Image
 from django.db import models
-from dash.templates.dash.csvstore import OverwriteStorage
+from dash.csvstore import OverwriteStorage
 
 
 class Profile(models.Model):

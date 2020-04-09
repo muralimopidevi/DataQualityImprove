@@ -19,6 +19,7 @@ from django.conf.urls.static import static
 from django.urls import path, include
 
 
+
 urlpatterns = [
     path('', include('login.urls')),
     path('dash/', include('dash.urls')),

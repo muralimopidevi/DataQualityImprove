@@ -28,6 +28,23 @@ class upload(TemplateView):
         return self.name
 
 
+class index(TemplateView):
+    template_name = 'dash/index.html'
+
+    def post(self, request, **kwargs):
+        if request.method == 'POST':
+            current_file = CurrentFile(filename = list(request.POST.keys())[1])
+            current_file.save()
+            context = {}
+            #listfiles = os.listdir('media/downloaded')
+            context['fileselected'] = list(request.POST.keys())[1]
+            context['test'] = 'a'
+            #context['listfiles'] = listfiles
+            return render(request,'dash/index.html', context)
+
+    def __str__(self):
+        return self.name
+
 # *****************************DATA PREPROCESSING*********************************************
 
 class prepross(TemplateView):
