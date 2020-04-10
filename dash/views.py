@@ -17,7 +17,6 @@ from .models import CSV
 
 
 # ------------------ UPLOADING CSV FILE ------------------------- #
-@login_required
 class UploadBookView(CreateView):
     model = CSV
     form_class = CSVForm
@@ -43,7 +42,6 @@ class index(TemplateView):
 
 
 # ------------------ PREPROCESSING  ------------------------- #
-@login_required
 class prepross(TemplateView):
     template_name = 'dash/preprocessing.html'
 
