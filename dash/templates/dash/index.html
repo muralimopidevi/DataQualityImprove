@@ -1,29 +1,23 @@
 {% extends "dash/dash-base-temp.html" %}
 {% load staticfiles %}
-    {% block content %}
+{% block content %}
 
-    {% url 'index' %}
+<h2>Select a CSV file for Preprocessing..!</h2>
 
+<form method="POST" enctype="multipart/form-data" class="form-horizontal form-inline">
+    {% csrf_token %}
 
-<h2>Select a file</h2>
-
-<form method="POST" action="." enctype="multipart/form-data" class="form-horizontal form-inline">
-{% csrf_token %}
-
-{% for i in listfiles %}
-  <div>
-    <button type="submit" name={{i}} class="fileUpload btn btn-primary">{{i}}</button>
-  </div>
-{% endfor %}
+    {% for i in listfiles %}
+    <div>
+        <button type="submit" name={{i}} class="fileUpload btn btn-primary">{{i}}</button>
+    </div>
+    {% endfor %}
 </form>
 
 {% if fileselected %}
-
-<p></p>
-<h2>NEW PROJECT</h2>
-<p class="fileUpload">{{fileselected}}</p>
+<hr>
+<h2>File selected</h2>
+<h3>Selected File is :<span class="fileUpload">{{fileselected}}</span></h3>
 
 {% endif %}
-
-
-{% endblock %}
+{% endblock content %}

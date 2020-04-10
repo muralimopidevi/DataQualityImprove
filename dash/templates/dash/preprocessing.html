@@ -1,143 +1,134 @@
 {% extends "dash/dash-base-temp.html" %}
 {% load staticfiles %}
-    {% block content %}
+{% block content %}
+<h2>Preprocessing</h2>
+<p class="fileUpload">{{file_name}} (n = {{row_count}})</p>
 
-    <h2>Preprocessing</h2>
-    <p class="fileUpload">{{file_name}} (n = {{row_count}})</p>
-
-    <form method="POST" action="." enctype="multipart/form-data">
-      {% csrf_token %}
+<form method="POST" action="." enctype="multipart/form-data">
+    {% csrf_token %}
     <div class="table-responsive jumbotron">
-      <h3> Select variables</h3>
-      <table class="table table-sm">
-        <tr>
-          <th> VARIABLE NAME </th>
-          <th> TYPE </th>
-          <th> MISSING VALUES </th>
-          <th> NUMBER OF DIFFRENET VALUES </th>
-          <th>  SELECT VARIABLES </th>
-        </tr>
-          {% for key, value, value2, value3 in file_type.itertuples %}
-        <tr>
-          <td> {{ key }} </td>
-          <td> <select class="form-control col-md-8" name="coltype">
-                  <option value={{key}}:{{value}}>{{ value }}</option>
-                  {% if value == 'object' %}
-                  <option value={{key}}:int64>int64</option>
-                  <option value={{key}}:float64>float64</option>
-                  {% endif %}
-                  {% if value == 'int64' %}
-                  <option value={{key}}:object>object</option>
-                  <option value={{key}}:float64>float64</option>
-                  {% endif %}
-                  {% if value == 'float64' %}
-                  <option value={{key}}:object>object</option>
-                  <option value={{key}}:int64>int64</option>
-                  {% endif %}
-               </select> </td>
-            <td> {{ value2 }} </td>
-            <td> {{ value3 }} </td>
-            <td> <select class="form-control col-md-8" name="assvar">
-                    <option value={{key}}:no> Remove </option>
-                    <option value={{key}}:y> y </option>
-                    <option value={{key}}:X> X </option>
-                 </select> </td>
-        </tr>
-        {% endfor %}
-      </table>
+        <h3> Select variables</h3>
+        <table class="table table-sm">
+            <tr>
+                <th> Column </th>
+                <th> Type </th>
+                <th> NA count </th>
+                <th> Count distinct </th>
+                <th> Assign Variable </th>
+            </tr>
+            {% for key, value, value2, value3 in file_type.itertuples %}
+            <tr>
+                <td> {{ key }} </td>
+                <td> <select class="form-control col-md-8" name="coltype">
+                        <option value={{key}}:{{value}}>{{ value }}</option>
+                        {% if value == 'object' %}
+                        <option value={{key}}:int64>int64</option>
+                        <option value={{key}}:float64>float64</option>
+                        {% endif %}
+                        {% if value == 'int64' %}
+                        <option value={{key}}:object>object</option>
+                        <option value={{key}}:float64>float64</option>
+                        {% endif %}
+                        {% if value == 'float64' %}
+                        <option value={{key}}:object>object</option>
+                        <option value={{key}}:int64>int64</option>
+                        {% endif %}
+                    </select> </td>
+                <td> {{ value2 }} </td>
+                <td> {{ value3 }} </td>
+                <td> <select class="form-control col-md-8" name="assvar">
+                        <option value={{key}}:no> Remove </option>
+                        <option value={{key}}:y> y </option>
+                        <option value={{key}}:X> X </option>
+                    </select> </td>
+            </tr>
+            {% endfor %}
+        </table>
 
-      <div class="form-row col-md-6">
-        <div class="fileUpload col" name="onehot">
-          <label> One hot encoding applied to all object datatype </label>
-            <select class="form-control" name="ordinal">
-                  <option value='no'>No encoding</option>
-                  <option value=encode>encoding</option>
-               </select>
+        <div class="form-row col-md-6">
+            <div class="fileUpload col">
+                <label> One hot encoding applied to all object datatype </label>
+            </div>
         </div>
-      </div>
 
-      <div class="form-row col-md-6">
-        <div class="fileUpload col col-md-6">
-          <label> Missing values </label>
-          <select class="form-control" name="missingvalues">
-                  <option value='no'>No missing data</option>
-                  <option value='na_omit'>NA omit</option>
-                  <option value='mean'> Mean </option>
-                  <option value='median'> median </option>
-               </select>
+        <div class="form-row col-md-6">
+            <div class="fileUpload col col-md-6">
+                <label> Missing values </label>
+                <select class="form-control" name="missingvalues">
+                    <option value='no'>No missing data</option>
+                    <option value='na_omit'>NA omit</option>
+                    <option value='mean'>Replace for mean (not working)</option>
+                </select>
+            </div>
         </div>
-      </div>
 
-      <div class="form-row col-md-6">
-        <div class="fileUpload form-row col-md-6">
-          <label class="fileUploadPos"> Training set size </label>
-          <input class="form-control col-md-8" type="number" max="100" accuracy="1" min="0" name="trainingset_size" value=75 id="trainingset_size">
-          <span class="fileUploadPos">%</span>
+        <div class="form-row col-md-6">
+            <div class="fileUpload form-row col-md-6">
+                <label class="fileUploadPos"> Training set size </label>
+                <input class="form-control col-md-8" type="number" max="100" accuracy="1" min="0" name="trainingset_size" value=75 id="trainingset_size">
+                <span class="fileUploadPos">%</span>
+            </div>
         </div>
-      </div>
 
-      <div class="form-row col-md-6">
+        <div class="form-row col-md-6">
 
-        <div class="fileUpload col col-md-6">
-          <label> Feature scaling </label>
-          <select class="form-control" name="featscaling">
-                  <option value='no'>No feature scaling</option>
-                  <option value='StandardScaler'>StandardScaler</option>
-               </select>
+            <div class="fileUpload col col-md-6">
+                <label> Feature scaling </label>
+                <select class="form-control" name="featscaling">
+                    <option value='no'>No feature scaling</option>
+                    <option value='StandardScaler'>StandardScaler</option>
+                </select>
+            </div>
         </div>
-      </div>
 
-      <p></p>
+        <p></p>
 
-      <div class="fileUpload btn btn-primary">
-        <span>Submit</span>
-          <div>
-              <input type="Submit" name="prepross_submit" class="upload">
-          </div>
-      </div>
+        <div class="fileUpload btn btn-primary">
+            <span>Submit</span>
+            <div>
+                <input type="Submit" name="prepross_submit" class="upload">
+            </div>
+        </div>
 
     </div>
-    </form>
+</form>
 <h1>{{selecty}}</h1>
 
 {% if graph %}
 
 <div class="jumbotron">
-  <div class="row">
-    <div class="fileUpload col-lg-4 col-xs-6">
-      <h3> Graphs</h3>
-      <h5> All data </h5>
-      <h5> Filter NA aplied </h5>
-      <h5> Feature scaling not applied </h5>
-    </div>
+    <div class="row">
+        <div class="fileUpload col-lg-4 col-xs-6">
+            <h3> Graphs</h3>
+            <h5> All data </h5>
+            <h5> Filter NA aplied </h5>
+            <h5> Feature scaling not applied </h5>
+        </div>
 
-      <div class="fileUpload col-lg-6 col-xs-6">
-        <h3>Your data selection:</h3>
-        <p>
-            <b>X variables:</b> {{ xcols }} <br>
-            <b>Y variable:</b> {{ ycol }} <br>
-            <b>Missing values:</b> {{ missing }} <br>
-            <b>Training set size:</b> {{ trainingset_s }}% <br>
-            <b>Test set size:</b> {{ testset_s }}%<br>
-            <b>Feature scaling:</b> {{ feat }} <br>
-            <b>onehotencoding:</b> {{ one }} <br>
-        </p>
-      </div>
-  </div>
+        <div class="fileUpload col-lg-6 col-xs-6">
+            <h3>Your data selection:</h3>
+            <p>
+                <b>X variables:</b> {{xcols}} <br>
+                <b>Y variable:</b> {{ycol}} <br>
+                <b>Missing values:</b> {{missing}} <br>
+                <b>Training set size:</b> {{trainingset_s}}% <br>
+                <b>Test set size:</b> {{testset_s}}%<br>
+                <b>Feature scaling:</b> {{feat}} <br>
+            </p>
+        </div>
+    </div>
 </div>
 
-    <div class="container-fluid">
-      <div class="row">
+<div class="container-fluid">
+    <div class="row">
         {% for value in graph.values %}
-          <div class="col-lg-4 col-xs-6">
-              {{ value|safe }}
-          </div>
+        <div class="col-lg-4 col-xs-6">
+            {{ value|safe }}
+        </div>
         {% endfor %}
-      </div>
     </div>
+</div>
 {% endif %}
-
-
 
 {% endblock content %}
 
