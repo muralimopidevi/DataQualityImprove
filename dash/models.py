@@ -23,7 +23,7 @@ class Profile(models.Model):
 class CSV(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     title = models.CharField(max_length=100)
-    pdf = models.FileField(upload_to='csv/')
+    pdf = models.FileField(upload_to='csvfiles/')
 
     def __str__(self):
         return f'{self.title}CSV'

@@ -52,7 +52,7 @@ class prepross(TemplateView):
         context = {}
         try:
             file_name = CurrentFile.objects.order_by('-id')[0].filename
-            df = pd.read_csv(os.path.join('Media\csv', file_name))
+            df = pd.read_csv(os.path.join('Media\csvfiles', file_name))
             count_nan = len(df) - df.count()
             row_count = df.count()[0]
             file_type = pd.concat([df.dtypes, count_nan, df.nunique()], axis=1)
@@ -65,7 +65,6 @@ class prepross(TemplateView):
 
         context['file_name'] = file_name
         return context
-
 
     def post(self, request, **kwargs):
         if request.method == 'POST':
@@ -83,7 +82,7 @@ class prepross(TemplateView):
             file_name = CurrentFile.objects.order_by('-id')[0].filename
             coltype = request.POST.getlist('coltype')
             coltype = dict([i.split(':', 1) for i in coltype])
-            df = pd.read_csv(os.path.join('Media\csv', file_name), dtype= coltype)
+            df = pd.read_csv(os.path.join('Media\csvfiles', file_name), dtype= coltype)
             row_count = df.count()[0]
 
             # Keep only selected columns
