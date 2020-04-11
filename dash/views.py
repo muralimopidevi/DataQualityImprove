@@ -57,7 +57,8 @@ class prepross(TemplateView):
             row_count = df.count()[0]
             file_type = pd.concat([df.dtypes, count_nan, df.nunique()], axis=1)
             file_type.columns = ("Type", "NA count", "Count distinct")
-
+            context['df'] = df
+            context['vals'] = df.values.tolist()
             context['file_type'] = file_type
             context['row_count'] = row_count
         except:
@@ -70,12 +71,12 @@ class prepross(TemplateView):
         if request.method == 'POST':
 
             # Entry to model
-            prep_file = Prepross.objects.get_or_create(filename = CurrentFile.objects.order_by('-id')[0].filename,
-                                                       coltype = request.POST.getlist('coltype'),
-                                                       assvar = request.POST.getlist('assvar'),
-                                                       missingvalues = request.POST.getlist('missingvalues'),
-                                                       trainingset_size = request.POST['trainingset_size'],
-                                                       featscaling = request.POST.getlist('featscaling'))
+            prep_file = Prepross.objects.get_or_create(filename=CurrentFile.objects.order_by('-id')[0].filename,
+                                                       coltype=request.POST.getlist('coltype'),
+                                                       assvar=request.POST.getlist('assvar'),
+                                                       missingvalues=request.POST.getlist('missingvalues'),
+                                                       trainingset_size=request.POST['trainingset_size'],
+                                                       featscaling=request.POST.getlist('featscaling'))
 
             # Get dataframe and change data type
             context = {}
@@ -121,7 +122,7 @@ class prepross(TemplateView):
                 graph = {}
                 for i in df.columns:
                     layout = go.Layout(autosize=False, width=400, height=400,
-                                       title= i,
+                                       title=i,
                                        xaxis=dict(title='Value'),
                                        yaxis=dict(title='Count'),
                                        bargap=0.2,
@@ -138,7 +139,7 @@ class prepross(TemplateView):
             context['feat'] = feat
             context['file_name'] = file_name
             context['row_count'] = row_count
-            return render(request,'dash/preprocessing.html', context)
+            return render(request, 'dash/preprocessing.html', context)
 
     def __str__(self):
         return self.name

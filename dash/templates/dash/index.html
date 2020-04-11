@@ -1,7 +1,12 @@
 {% extends "dash/dash-base-temp.html" %}
 {% load staticfiles %}
 {% block content %}
-
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item "><a href="{% url 'upload' %}">Upload</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Select File</li>
+  </ol>
+</nav>
 <h2>Select a CSV file for Preprocessing..!</h2>
 
 <form method="POST" enctype="multipart/form-data" class="form-horizontal form-inline">

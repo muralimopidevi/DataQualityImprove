@@ -1,7 +1,11 @@
 {% extends "dash/dash-base-temp.html" %}
 {% block content %}
 {% load crispy_forms_tags %}
-
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item ">Upload</li>
+  </ol>
+</nav>
 <h2>Upload new file</h2>
   <form method="post" enctype="multipart/form-data">
     {% csrf_token %}

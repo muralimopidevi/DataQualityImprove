@@ -1,20 +1,26 @@
 {% extends "dash/dash-base-temp.html" %}
 {% load staticfiles %}
 {% block content %}
-<h2>Preprocessing</h2>
-<p class="fileUpload">{{file_name}} (n = {{row_count}})</p>
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item "><a href="{% url 'upload' %}">Upload</a></li>
+        <li class="breadcrumb-item active" aria-current="page"><a href="{% url 'index' %}">Select File</a></li>
+        <li class="breadcrumb-item " aria-current="page">Data Preprocessing</li>
+    </ol>
+</nav>
+<h4>File name:- {{file_name}} <span class="badge badge-danger"> Rows count : {{row_count}} </span></h4>
 
 <form method="POST" action="." enctype="multipart/form-data">
     {% csrf_token %}
     <div class="table-responsive jumbotron">
-        <h3> Select variables</h3>
-        <table class="table table-sm">
+        <h3>Select Variables For Further Process</h3>
+        <table class="table table-sm text-dark">
             <tr>
-                <th> Column </th>
-                <th> Type </th>
-                <th> NA count </th>
-                <th> Count distinct </th>
-                <th> Assign Variable </th>
+                <th> Column Name </th>
+                <th> TYPE </th>
+                <th> NAN COUNT </th>
+                <th> DISTINCT COUNT </th>
+                <th> ASSIGN VARIABLE </th>
             </tr>
             {% for key, value, value2, value3 in file_type.itertuples %}
             <tr>
@@ -44,45 +50,46 @@
             </tr>
             {% endfor %}
         </table>
-
-        <div class="form-row col-md-6">
-            <div class="fileUpload col">
-                <label> One hot encoding applied to all object datatype </label>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="form-group col-md-4">
+                    <div class="fileUpload">
+                        <label> Missing Values </label>
+                        <select class="form-control" name="missingvalues">
+                            <option value='no'>No missing data</option>
+                            <option value='na_omit'>NA omit</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group col-md-4">
+                    <div class="fileUpload ">
+                        <label> Imputation Na Values </label>
+                        <select class="form-control" name="#">
+                            <option value='#'>Mean</option>
+                            <option value='#'>Meadian</option>
+                            <option value='#'>Mode</option>
+                            <option value='#'>RandomForest</option>
+                            <option value='#'>KNN</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group col-md-4">
+                    <div class="fileUpload">
+                        <label> Feature scaling </label>
+                        <select class="form-control" name="featscaling">
+                            <option value='no'>No feature scaling</option>
+                            <option value='StandardScaler'>StandardScaler</option>
+                        </select>
+                    </div>
+                </div>
+                 <div class="form-group col-md-4">
+                    <div class="fileUpload ">
+                        <label class="fileUploadPos"> Training Set Size % </label>
+                        <input class="form-control col-md-8" type="number" max="100" accuracy="1" min="0" name="trainingset_size" value=75 id="trainingset_size">
+                    </div>
+                </div>
             </div>
         </div>
-
-        <div class="form-row col-md-6">
-            <div class="fileUpload col col-md-6">
-                <label> Missing values </label>
-                <select class="form-control" name="missingvalues">
-                    <option value='no'>No missing data</option>
-                    <option value='na_omit'>NA omit</option>
-                    <option value='mean'>Replace for mean (not working)</option>
-                </select>
-            </div>
-        </div>
-
-        <div class="form-row col-md-6">
-            <div class="fileUpload form-row col-md-6">
-                <label class="fileUploadPos"> Training set size </label>
-                <input class="form-control col-md-8" type="number" max="100" accuracy="1" min="0" name="trainingset_size" value=75 id="trainingset_size">
-                <span class="fileUploadPos">%</span>
-            </div>
-        </div>
-
-        <div class="form-row col-md-6">
-
-            <div class="fileUpload col col-md-6">
-                <label> Feature scaling </label>
-                <select class="form-control" name="featscaling">
-                    <option value='no'>No feature scaling</option>
-                    <option value='StandardScaler'>StandardScaler</option>
-                </select>
-            </div>
-        </div>
-
-        <p></p>
-
         <div class="fileUpload btn btn-primary">
             <span>Submit</span>
             <div>
@@ -130,5 +137,40 @@
 </div>
 {% endif %}
 
-{% endblock content %}
 
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
+
+          <!-- Page Heading -->
+          <h1 class="h3 mb-2 text-gray-800">Tables</h1>
+
+          <!-- DataTales Example -->
+          <div class="card shadow mb-4">
+            <div class="card-header py-3">
+              <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
+            </div>
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                  <thead>
+                  <tr>
+                      {% for col in df %}
+                      <th>{{ col|safe }}</th>
+                      {% endfor %}
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr>
+                      {% for val in vals %}
+                      <td>{{ val }}</td>
+                      {% endfor %}
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <!-- /.container-fluid -->
+{% endblock content %}
