@@ -2,7 +2,7 @@
 .DS_Store
 
 #CSV
-*.csv
+/*.csv
 
 
 # Byte-compiled / optimized / DLL files
