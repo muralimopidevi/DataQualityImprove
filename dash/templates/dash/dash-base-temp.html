@@ -9,39 +9,36 @@
   <meta name="author" content="">
   <meta name="keywords" content="">
   <link rel="shortcut icon" href="{% static 'dash/images/favicon.ico' %}" />
-
-    {% if title %}
-	<title>DataQuality - {{ title }}</title>
-	{% else %}
-	<title>DataQuality</title>
-	{% endif %}
-    <!-- FIXED CSS START -->
-	<!-- Custom fonts for this template-->
-	<link href="{% static 'dash/css/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
-	<!-- Custom styles for this template-->
-	<link href="{% static 'dash/css/sb-admin-2.css' %}" rel="stylesheet">
-	<link href="{% static 'dash/css/style.css' %}" rel="stylesheet">
-    <!-- FIXED CSS END -->
-    <!-- CHART JS and CSS  START-->
-    <script src="{% static 'dash/chartjs/js/Chart.bundle.js' %}" ></script>
-    <script src="{% static 'dash/chartjs/js/Chart.js' %}" ></script>
-    <script src="{% static 'dash/chartjs/js/jquery.1.12.4.js' %}" ></script>
-    <link href="{% static 'dash/chartjs/css/Chart.css' %}" rel="stylesheet">
-    <!-- CHART JS and CSS  END-->
-    <link href="{% static 'dash/datatables/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
-    <!-- PLOTLY DASH START-->
-    <script src="https://cdn.plot.ly/plotly-latest.min.js" ></script>
-    <!-- PLOTLY DASH END-->
+  {% if title %}
+  <title>DataQuality - {{ title }}</title>
+  {% else %}
+  <title>DataQuality</title>
+  {% endif %}
+  <!-- FIXED CSS START -->
+  <!-- Custom fonts for this template-->
+  <link href="{% static 'dash/css/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
+  <!-- Custom styles for this template-->
+  <link href="{% static 'dash/css/sb-admin-2.css' %}" rel="stylesheet">
+  <link href="{% static 'dash/css/style.css' %}" rel="stylesheet">
+  <!-- FIXED CSS END -->
+  <!-- CHART JS and CSS  START-->
+  <script src="{% static 'dash/chartjs/js/Chart.bundle.js' %}" ></script>
+  <script src="{% static 'dash/chartjs/js/Chart.js' %}" ></script>
+  <script src="{% static 'dash/chartjs/js/jquery.1.12.4.js' %}" ></script>
+  <link href="{% static 'dash/chartjs/css/Chart.css' %}" rel="stylesheet">
+  <!-- CHART JS and CSS  END-->
+  <link href="{% static 'dash/datatables/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
+  <!-- PLOTLY DASH START-->
+  <script src="https://cdn.plot.ly/plotly-latest.min.js" ></script>
+  <!-- PLOTLY DASH END-->
 </head>
 
 <body id="page-top">
 
   <!-- Page Wrapper -->
   <div id="wrapper">
-
     <!-- Sidebar -->
     <ul class="navbar-nav bg-dark sidebar sidebar-dark accordion" id="accordionSidebar">
-
       <!-- Sidebar - Brand -->
       <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{% url 'upload' %}">
         <div class="sidebar-brand-icon ">
@@ -49,24 +46,16 @@
         </div>
         <div class="sidebar-brand-text mx-3">Data Quality EISTI</div>
       </a>
-
       <!-- Divider -->
       <hr class="sidebar-divider my-0">
-
       <!-- Nav Item - Dashboard -->
       <li class="nav-item active">
         <a class="nav-link" href="{% url 'upload' %}">
           <i class="fas fa-fw fa-tachometer-alt"></i>
           <span>Upload CSV</span></a>
       </li>
-
       <!-- Divider -->
       <hr class="sidebar-divider">
-
-
-
-
-
       <!-- Nav Item - Pages Collapse Menu
       <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
@@ -88,14 +77,12 @@
           <span>Select CSV</span></a>
       </li>
 <hr class="sidebar-divider">
-
        <!-- Nav Item - Tables -->
       <li class="nav-item">
         <a class="nav-link" href="{% url 'prepross' %}">
           <i class="fas fa-fw fa-envelope-square"></i>
           <span>Data Preprocessing</span></a>
       </li>
-
       <!-- Divider -->
       <hr class="sidebar-divider d-none d-md-block">
 
@@ -103,31 +90,21 @@
       <div class="text-center d-none d-md-inline">
         <button class="rounded-circle border-0" id="sidebarToggle"></button>
       </div>
-
     </ul>
     <!-- End of Sidebar -->
-
     <!-- Content Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">
-
       <!-- Main Content -->
       <div id="content">
-
         <!-- Topbar -->
         <nav class="navbar navbar-expand navbar-dark bg-dark topbar mb-4 static-top shadow" style="height: 50px;">
-
           <!-- Sidebar Toggle (Topbar) -->
           <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
             <i class="fa fa-bars"></i>
           </button>
-
           <!-- Topbar Search -->
-
-
           <!-- Topbar Navbar -->
           <ul class="navbar-nav ml-auto">
-
-
             <!-- Nav Item - User Information -->
             <li class="nav-item dropdown no-arrow" >
               <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
@@ -140,13 +117,11 @@
                   <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-800"></i>
                   Profile
                 </a>
-
                 <div class="dropdown-divider"></div>
                   <a class="dropdown-item" href="{% url 'dash-password' %}">
                   <i class="fas fa-key fa-sm fa-fw mr-2 text-gray-800"></i>
                   Change Password
                 </a>
-
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="{% url 'logout' %}" >
                   <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-800"></i>
@@ -154,15 +129,11 @@
                 </a>
               </div>
             </li>
-
           </ul>
-
         </nav>
         <!-- End of Topbar -->
-
         <!-- Begin Page Content -->
         <div class="container-fluid">
-
          {% if messages %}
 				{% for message in messages %}
 				<div class="offset-md-3 col-md-6" style="z-index:12;">
@@ -173,15 +144,11 @@
 				</div>
 				{% endfor %}
 				{% endif %}
-
 				{% block content %} {% endblock %}
-
         </div>
         <!-- /.container-fluid -->
-
       </div>
       <!-- End of Main Content -->
-
       <!-- Footer -->
       <footer class="sticky-footer bg-white">
         <div class="container my-auto">
@@ -191,13 +158,10 @@
         </div>
       </footer>
       <!-- End of Footer -->
-
     </div>
     <!-- End of Content Wrapper -->
-
   </div>
   <!-- End of Page Wrapper -->
-
   <!-- Scroll to Top Button-->
   <a class="scroll-to-top rounded" href="#page-top">
     <i class="fas fa-angle-up"></i>
