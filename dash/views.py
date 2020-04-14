@@ -11,7 +11,8 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.decorators import login_required
 import plotly.graph_objs as go
 import plotly.offline as opy
-from sklearn.impute import SimpleImputer
+from sklearn.impute import SimpleImputer, KNNImputer
+from missingpy import MissForest
 from dash.models import CurrentFile, Prepross, CSV
 from .forms import UserUpdateForm, ProfileUpdateForm, CSVForm
 
@@ -95,14 +96,16 @@ class prepross(TemplateView):
             trainingset_s = request.POST.getlist('trainingset_size')
             trainingset_s = ', '.join(trainingset_s)
             testset_s = 100 - int(trainingset_s)
-            feat = request.POST['featscaling']
             # Taking care of missing data
-            if missing == "no":
+            if missing == "Keep_NAN":
                 if len(df) != len(df.dropna()):
                     context['selecty'] = 'Your data seem to have Missing Values'
-                else:
-                    df = df.dropna()
-            if imputing == "mean" or imputing == "median" or imputing == "most_frequent" or imputing == "constant":
+            if missing == "Drop_NAN":
+                df = df.dropna()
+            if imputing == "mean" or\
+                    imputing == "median" or\
+                    imputing == "most_frequent" or\
+                    imputing == "constant":
                 impute = imputing
                 categorical_columns = []
                 numeric_columns = []
@@ -115,6 +118,46 @@ class prepross(TemplateView):
                 data_numeric = df[numeric_columns]
                 data_categorical = pd.DataFrame(df[categorical_columns])
                 imp = SimpleImputer(missing_values=np.nan, strategy=impute)
+                data_numeric = pd.DataFrame(imp.fit_transform(data_numeric),
+                                            columns=data_numeric.columns)  # only apply imputer to numeric columns
+                # you could do something like one-hot-encoding of data_categorical here
+                # join the two masked data frames back together
+                df = pd.concat([data_numeric, data_categorical], axis=1)
+            if imputing == "KNN":
+                categorical_columns = []
+                numeric_columns = []
+                for c in df.columns:
+                    if df[c].map(type).eq(str).any():  # check if there are any strings in column
+                        categorical_columns.append(c)
+                    else:
+                        numeric_columns.append(c)
+                # create two DataFrames, one for each data type
+                data_numeric = df[numeric_columns]
+                data_categorical = pd.DataFrame(df[categorical_columns])
+                imp = KNNImputer(n_neighbors=5, weights="uniform")
+                data_numeric = pd.DataFrame(imp.fit_transform(data_numeric),
+                                            columns=data_numeric.columns)  # only apply imputer to numeric columns
+                # you could do something like one-hot-encoding of data_categorical here
+                # join the two masked data frames back together
+                df = pd.concat([data_numeric, data_categorical], axis=1)
+            if imputing == "RDF":
+                categorical_columns = []
+                numeric_columns = []
+                for c in df.columns:
+                    if df[c].map(type).eq(str).any():  # check if there are any strings in column
+                        categorical_columns.append(c)
+                    else:
+                        numeric_columns.append(c)
+                # create two DataFrames, one for each data type
+                data_numeric = df[numeric_columns]
+                data_categorical = pd.DataFrame(df[categorical_columns])
+                imp = MissForest(max_iter=10, decreasing=False, missing_values=np.nan,
+                                 copy=True, n_estimators=100, criterion=('mse', 'gini'),
+                                 max_depth=None, min_samples_split=2, min_samples_leaf=1,
+                                 min_weight_fraction_leaf=0.0, max_features='auto',
+                                 max_leaf_nodes=None, min_impurity_decrease=0.0,
+                                 bootstrap=True, oob_score=False, n_jobs=-1, random_state=None,
+                                 verbose=0, warm_start=False, class_weight=None)
                 data_numeric = pd.DataFrame(imp.fit_transform(data_numeric),
                                             columns=data_numeric.columns)  # only apply imputer to numeric columns
                 # you could do something like one-hot-encoding of data_categorical here
@@ -140,9 +183,9 @@ class prepross(TemplateView):
             context['xcols'] = xcols
             context['ycol'] = ycol
             context['missing'] = missing
+            context['imputing'] = imputing
             context['trainingset_s'] = trainingset_s
             context['testset_s'] = testset_s
-            context['feat'] = feat
             context['file_name'] = file_name
             context['row_count'] = row_count
             context['df'] = df
