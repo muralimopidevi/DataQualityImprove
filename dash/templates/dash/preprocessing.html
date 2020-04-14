@@ -78,8 +78,21 @@
                     <div class="fileUpload">
                         <label> Missing values </label>
                         <select class="form-control" name="missingvalues">
-                            <option value='no'>No missing data</option>
-                            <option value='na_omit'>NA omit</option>
+                            <option value='no'>Keep Na Values</option>
+                            <option value='Drop_NA'>Drop Na Values</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group col-md-4">
+                    <div class="fileUpload ">
+                        <label> Imputation Na Values </label>
+                        <select class="form-control" name="imputing">
+                            <option value='mean'>Mean</option>
+                            <option value='median'>Median</option>
+                            <option value='most_frequent'>Most frequent</option>
+                            <option value='constant'>Constant</option>
+                            <option value='#'>RandomForest</option>
+                            <option value='#'>KNN</option>
                         </select>
                     </div>
                 </div>
@@ -98,18 +111,7 @@
                         </select>
                     </div>
                 </div>
-                <div class="form-group col-md-4">
-                    <div class="fileUpload ">
-                        <label> Imputation Na Values </label>
-                        <select class="form-control" name="#">
-                            <option value='#'>Mean</option>
-                            <option value='#'>Meadian</option>
-                            <option value='#'>Mode</option>
-                            <option value='#'>RandomForest</option>
-                            <option value='#'>KNN</option>
-                        </select>
-                    </div>
-                </div>
+
             </div>
         </div>
         <div class="fileUpload btn btn-primary">
@@ -140,7 +142,8 @@
                 <b>Missing values:</b> {{missing}} <br>
                 <b>Training set size:</b> {{trainingset_s}}% <br>
                 <b>Test set size:</b> {{testset_s}}%<br>
-                <b>Feature scaling:</b> {{feat}} <br></p>
+                <b>Feature scaling:</b> {{feat}} <br>
+            </p>
         </div>
     </div>
 </div>
@@ -153,6 +156,26 @@
         {% endfor %}
     </div>
 </div>
+    <table class="table table-responsive table-striped table-dark " width="100%"   cellspacing="0">
+        <thead>
+        <tr>
+            {% for columns in df %}
+            <th>{{ columns | safe }}</th>
+            {% endfor %}
+        </tr>
+        </thead>
+        <tbody>
+        {% for _, data in df.iterrows %}
+        <tr>
+            {% for value in data %}
+            <td>{{ value | safe }}</td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+        </tbody>
+
+    </table>
+
 {% endif %}
 
 {% endblock content %}
