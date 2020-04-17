@@ -41,7 +41,7 @@ defusedxml==0.6.0
 diff-match-patch==20181111
 distlib==0.3.0
 dj-database-url==0.5.0
-Django==2.1.15
+Django==2.2.10
 django-bootstrap-form==3.4
 django-check-seo==0.3.4
 django-classy-tags==1.0.0
