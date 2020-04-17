@@ -1,3 +1,4 @@
+
 Django
 django-bootstrap-form
 django-crispy-forms
@@ -16,9 +17,7 @@ mistune
 nltk
 numpy
 pandas
-pandas-profiling
 Pillow
-pivottablejs
 plotly
 scikit-learn
 scipy
