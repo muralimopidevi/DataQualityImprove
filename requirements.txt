@@ -9,7 +9,7 @@ djangorestframework
 folium
 geopy
 gunicorn
-matplotlib1
+matplotlib
 missingno
 missingpy
 mistune
