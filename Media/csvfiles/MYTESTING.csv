@@ -1,0 +1,11 @@
+TEXT,INTEGER,DATE,DATE-2,FLOAT,STRING,INT-FLOAT,BOOL,BOOL-2,BOOL-3,INT
+Apple,1,"Wednesday, September 2, 1992",02-09-92,20.5,Below is a list of features our,1,0,T,TRUE,1.00
+Mango,,"Wednesday, September 2, 2020",06-04-19,0.05,,3.5,1,F,TRUE,1.00
+Grapes,19,"Monday, June 15, 2026",,1.5,Number of bedrooms in the house,88.2,,T,,
+,2,,25-08-10,99.5,,6,0,,,6.00
+Mango,3,,,8.69,,7.6,,,FALSE,
+Apple,,"Wednesday, September 2, 1992",,,will have a parameter ?bath_per_bead? that takes in a,22,0,T,,2.00
+,12,"Saturday, September 2, 1989",15-12-02,,,,,F,TRUE,
+Grapes,,"Monday, June 15, 2026",,14.66,and drop the original bathroom column,,,,,9.00
+Orange,1,,01-01-12,,otal size of the lot in square feet,,1,,FALSE,
+,,,,,,,,,,
