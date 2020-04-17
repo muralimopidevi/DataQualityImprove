@@ -1,110 +1,21 @@
-particlesJS("particles-js", {
-  "particles": {
-    "number": {
-      "value": 80,
-      "density": {
-        "enable": true,
-        "value_area": 700
-      }
-    },
-    "color": {
-      "value": "#ffffff"
-    },
-    "shape": {
-      "type": "triangle",
-      "stroke": {
-        "width": 0,
-        "color": "#000000"
-      },
-      "polygon": {
-        "nb_sides": 12
-      },
-      "image": {
-        "src": "img/github.svg",
-        "width": 100,
-        "height": 100
-      }
-    },
-    "opacity": {
-      "value": 0.9,
-      "random": false,
-      "anim": {
-        "enable": false,
-        "speed": 1,
-        "opacity_min": 0.9,
-        "sync": false
-      }
-    },
-    "size": {
-      "value": 8,
-      "random": true,
-      "anim": {
-        "enable": false,
-        "speed": 60,
-        "size_min": 0.1,
-        "sync": false
-      }
-    },
-    "line_linked": {
-      "enable": true,
-      "distance": 120,
-      "color": "#ffffff",
-      "opacity": 0.4,
-      "width": 1
-    },
-    "move": {
-      "enable": true,
-      "speed": 6,
-      "direction": "none",
-      "random": false,
-      "straight": false,
-      "out_mode": "out",
-      "bounce": false,
-      "attract": {
-        "enable": false,
-        "rotateX": 600,
-        "rotateY": 1200
-      }
-    }
-  },
-  "interactivity": {
-    "detect_on": "canvas",
-    "events": {
-      "onhover": {
-        "enable": true,
-        "mode": "repulse"
-      },
-      "onclick": {
-        "enable": true,
-        "mode": "push"
-      },
-      "resize": true
-    },
-    "modes": {
-      "grab": {
-        "distance": 400,
-        "line_linked": {
-          "opacity": 1
-        }
-      },
-      "bubble": {
-        "distance": 150,
-        "size": 30,
-        "duration": 2,
-        "opacity": 8,
-        "speed": 3
-      },
-      "repulse": {
-        "distance": 200,
-        "duration": 0.4
-      },
-      "push": {
-        "particles_nb": 4
-      },
-      "remove": {
-        "particles_nb": 2
-      }
-    }
-  },
-  "retina_detect": true
-});
+
+function getRandomInt(min, max) {
+  return Math.floor(Math.random() * (max - min)) + min;
+}
+
+function particlesInit() {
+	var generator = document.getElementById("particleGenerator");
+	var particleCount = 300;
+	for (var i = 0; i < particleCount; i++) {
+		var size = getRandomInt(3, 9);
+		var n = '<div class="particle" style="top:' + getRandomInt(15, 95) + '%; left:' + getRandomInt(5,95) + '%; width:'
+		+ size + 'px; height:' + size + 'px; animation-delay:' + (getRandomInt(0,30)/10) + 's; background-color:rgba('
+		+ getRandomInt(80, 160) + ',' + getRandomInt(185, 255) + ',' + getRandomInt(160, 255) + ',' + (getRandomInt(2, 8)/10) + ');"></div>';
+		console.log("Particle " + i + ": " + n);
+		var node = document.createElement("div");
+		node.innerHTML = n;
+		generator.appendChild(node);
+	}
+}
+
+particlesInit();

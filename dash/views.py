@@ -9,9 +9,11 @@ from django.urls import reverse_lazy
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.decorators import login_required
+from pandas_profiling import ProfileReport
 import plotly.graph_objs as go
 import plotly.offline as opy
 from sklearn.impute import SimpleImputer, KNNImputer
+from sklearn.base import TransformerMixin
 from missingpy import MissForest
 from dash.models import CurrentFile, Prepross, CSV
 from .forms import UserUpdateForm, ProfileUpdateForm, CSVForm
@@ -44,10 +46,24 @@ class index(TemplateView):
 
 
 # ------------------ PREPROCESSING  ------------------------- #
-class prepross(TemplateView):
+class prepross(TemplateView, TransformerMixin):
     template_name = 'dash/preprocessing.html'
+
     # model = Prepross
     # fields = ('file_name','coltype','Xvars','Yvar','onehot','featscaling','Drop_NA')
+    def __init__(self):
+        """Impute missing values.
+        Columns of dtype object are imputed with the most frequent value
+        in column.
+        Columns of other types are imputed with mean of column.
+        """
+    def fit(self, X, y=None):
+        self.fill = pd.Series([X[c].value_counts().index[0]
+                               if X[c].dtype == np.dtype('O') else X[c].median() for c in X], index=X.columns)
+        return self
+
+    def transform(self, X, y=None):
+        return X.fillna(self.fill)
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
@@ -57,6 +73,8 @@ class prepross(TemplateView):
             df1 = pd.read_csv(os.path.join('Media\csvfiles', file_name))
             # Infer Data types
             df = df1.infer_objects()
+            # profile = ProfileReport(df, title='DATA INFORMATION', minimal=True, html={'style': {'full_width': True}})
+            # profile.to_file(output_file="dash/output.html")
             count_nan = len(df) - df.count()
             row_count = df.count()[0]
             file_type = pd.concat([df.dtypes, count_nan, df.nunique()], axis=1)
@@ -78,6 +96,18 @@ class prepross(TemplateView):
             coltype = request.POST.getlist('coltype')
             coltype = dict([i.split(':', 1) for i in coltype])
             df = pd.read_csv(os.path.join('Media\csvfiles', file_name), low_memory=False, dtype=coltype)
+            categorical_columns = []
+            numeric_columns = []
+            for c in df.columns:
+                if df[c].map(type).eq(str).any():  # check if there are any strings in column
+                    categorical_columns.append(c)
+                else:
+                    numeric_columns.append(c)
+            # create two DataFrames, one for each data type
+            data_numeric = df[numeric_columns]
+            data_categorical = pd.DataFrame(df[categorical_columns])
+            data_categorical = pd.DataFrame(prepross().fit_transform(data_categorical), columns=data_categorical.columns)
+            df = pd.concat([data_numeric, data_categorical], axis=1)
             row_count = df.count()[0]
             # Keep only selected columns
             assvar = request.POST.getlist('assvar')
