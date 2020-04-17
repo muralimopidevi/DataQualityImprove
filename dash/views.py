@@ -9,7 +9,7 @@ from django.urls import reverse_lazy
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.decorators import login_required
-from pandas_profiling import ProfileReport
+#from pandas_profiling import ProfileReport
 import plotly.graph_objs as go
 import plotly.offline as opy
 from sklearn.impute import SimpleImputer, KNNImputer
