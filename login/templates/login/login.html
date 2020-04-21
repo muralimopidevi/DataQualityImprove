@@ -1,6 +1,5 @@
 {% extends "login/base_no_nav_bar.html" %}
 {% load crispy_forms_tags %}
-{% load static %}
 {% block content %}
 <div id="bg1"></div>
 <div id="bg2"></div>
@@ -10,34 +9,31 @@
 		<div class="col-md-4 box blurred-bg tinted">
 			<div class="content">
 				<form method="POST" class="content-section" style="border: 1px solid #fff;">
-				{% csrf_token %}
-				<div class="row">
-					<div class="col-sm-12">
-						<h3 class="text-center text-white">DATA QUALITY IMPROVEMENT</h3>
-						<h3 class="text-center text-white">LOGIN HERE</h3>
+					{% csrf_token %}
+					<div class="row">
+						<div class="col-sm-12">
+							<h3 class="text-center text-white">DATA QUALITY IMPROVEMENT</h3>
+							<h3 class="text-center text-white">LOGIN HERE</h3>
+						</div>
 					</div>
-				</div>
-				<fieldset class="form-group">
-					<legend class="border-bottom  label" ></legend>
-					{{ form|crispy}}
-				</fieldset>
-				<div class="form-group">
-					<button class="btn btn-outline-success" type="submit">Login</button>
-					<small class="text-muted" >
-						<a href="{% url 'password_reset' %}" class="hoverlog">Forget Password..?</a>
-					</small>
-				</div>
-				<div class="form-group">
-					<small class="text-white">
-						Create An Account Here..! <a  class="ml-2 hoverlog" href="{% url 'login-register' %}">Register Here..!</a>
-					</small>
-				</div>
-			</form>
+					<fieldset class="form-group">
+						<legend class="border-bottom  label" ></legend>
+						{{ form|crispy}}
+					</fieldset>
+					<div class="form-group">
+						<button class="btn btn-outline-success" type="submit">Login</button>
+						<small class="text-muted" >
+							<a href="{% url 'password_reset' %}" class="hoverlog">Forget Password..?</a>
+						</small>
+					</div>
+					<div class="form-group">
+						<small class="text-white">
+							Create An Account Here..! <a  class="ml-2 hoverlog" href="{% url 'login-register' %}">Register Here..!</a>
+						</small>
+					</div>
+				</form>
 			</div>
 		</div>
 	</div>
-		</div>
-
-
-
+</div>
 {% endblock content %}

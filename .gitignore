@@ -1,8 +1,12 @@
 # Mac
 .DS_Store
+#Pycharm
+.idea
 
 #CSV
 
+#PDF
+.pdf
 
 
 # Byte-compiled / optimized / DLL files
