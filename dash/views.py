@@ -1,6 +1,8 @@
 import os
 import pandas as pd
 import numpy as np
+import plotly.graph_objs as go
+import plotly.offline as opy
 from django.contrib import messages
 from django.shortcuts import render
 from django.shortcuts import redirect
@@ -9,9 +11,10 @@ from django.urls import reverse_lazy
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.decorators import login_required
-import plotly.graph_objs as go
-import plotly.offline as opy
+from django.views.generic.base import ContextMixin
 from sklearn.impute import SimpleImputer, KNNImputer
+from sklearn.compose import ColumnTransformer
+from sklearn.preprocessing import LabelEncoder, OneHotEncoder
 from sklearn.base import TransformerMixin
 from missingpy import MissForest
 from dash.models import CurrentFile, Prepross, CSV
@@ -45,7 +48,7 @@ class index(TemplateView):
 
 
 # ------------------ PREPROCESSING  ------------------------- #
-class prepross(TemplateView, TransformerMixin):
+class prepross(TemplateView, TransformerMixin, ContextMixin):
     template_name = 'dash/preprocessing.html'
 
     # model = Prepross
@@ -65,8 +68,8 @@ class prepross(TemplateView, TransformerMixin):
         return X.fillna(self.fill)
 
     def get_context_data(self, **kwargs):
-        data = super().get_context_data(**kwargs)
-        context = {}
+        context = super().get_context_data(**kwargs)
+
         try:
             file_name = CurrentFile.objects.order_by('-id')[0].filename
             df1 = pd.read_csv(os.path.join('Media\csvfiles', file_name))
@@ -88,13 +91,15 @@ class prepross(TemplateView, TransformerMixin):
         return context
 
     def post(self, request, **kwargs):
+        context = self.get_context_data(**kwargs)
         if request.method == 'POST':
             # Get dataframe and change data type
-            context = {}
             file_name = CurrentFile.objects.order_by('-id')[0].filename
             coltype = request.POST.getlist('coltype')
             coltype = dict([i.split(':', 1) for i in coltype])
+            # Reading Dataframe
             df = pd.read_csv(os.path.join('Media\csvfiles', file_name), low_memory=False, dtype=coltype)
+
             categorical_columns = []
             numeric_columns = []
             for c in df.columns:
@@ -103,21 +108,40 @@ class prepross(TemplateView, TransformerMixin):
                 else:
                     numeric_columns.append(c)
             # create two DataFrames, one for each data type
-            data_numeric = df[numeric_columns]
-            data_categorical = pd.DataFrame(df[categorical_columns])
+            data_numeric = df[numeric_columns]  # Numerical List.
+            data_categorical = pd.DataFrame(df[categorical_columns])  # Categorical List.
+            # Imputation of Categorical Values by Mean
             data_categorical = pd.DataFrame(prepross().fit_transform(data_categorical), columns=data_categorical.columns)
             df = pd.concat([data_numeric, data_categorical], axis=1)
             row_count = df.count()[0]
-            # Keep only selected columns
+
+            # request from user form which type of encoding need for each column
+            encoding = request.POST.getlist('encoding')
+            col_encode = [aa for aa in encoding if ":column_encoder" in aa]
+            col_encode_names_list = [i.split(':', 1)[0] for i in col_encode]  # List of Column Transformer.
+            col_label = [bb for bb in encoding if ":label_encoder" in bb]
+            col_label_names_list = [i.split(':', 1)[0] for i in col_label]   # List of Label Encoder.
+            col_no_label = [cc for cc in encoding if ":no_encoding" in cc]
+            col_no_label_names_list = [i.split(':', 1)[0] for i in col_no_label]  # List of No Encoding.
+            col_all = col_encode_names_list + col_label_names_list + col_no_label_names_list  # Adding all List Together
+            df = df[col_all]  # Passing to Dataframe.
+            col_encode_names = ', '.join(col_encode_names_list)
+            col_label_names = ', '.join(col_label_names_list)
+            col_no_label_names = ', '.join(col_no_label_names_list)
+
+            # Selecting  X and Y and Column Remove
             assvar = request.POST.getlist('assvar')
             xcols0 = [s for s in assvar if ":X" in s]
             xcols = [i.split(':', 1)[0] for i in xcols0]  # Select X cols from user form
             ycol0 = [s for s in assvar if ":y" in s]
             ycol = [i.split(':', 1)[0] for i in ycol0]  # Select y cols from user form
+            X_Cols = df[xcols]
+            Y_Col = df(ycol)
             cols = xcols + ycol  # combining Both X and Y
             df = df[cols]  # Creating a DataFrame from combined Cols
             xcols = ', '.join(xcols)
             ycol = ', '.join(ycol)
+
             missing = request.POST.getlist('missingvalues')
             missing = ', '.join(missing)
             imputing = request.POST.getlist('imputing')
@@ -194,7 +218,7 @@ class prepross(TemplateView, TransformerMixin):
                 df = pd.concat([data_numeric, data_categorical], axis=1)
             # Return error if columns are not selected
             if len(ycol0) != 1:
-                context['selecty'] = 'Please select one y variable'
+                context['selecty'] = 'Please select only one y variable'
             elif len(xcols0) < 1:
                 context['selecty'] = 'Please select one or more X variables'
             else:
@@ -209,8 +233,24 @@ class prepross(TemplateView, TransformerMixin):
                     data = go.Figure(data=[go.Histogram(x=df[i])], layout=layout)
                     graph[i] = opy.plot(data, include_plotlyjs=False, output_type='div')
                 context['graph'] = graph
+            col_encode_names_vals = pd.DataFrame(df[col_encode_names_list])
+            col_label_names_vals = pd.DataFrame(df[col_label_names_list])
+            col_no_label_names_vals = pd.DataFrame(df[col_no_label_names_list])
+            onehoted = ColumnTransformer(transformers=[('encoder', OneHotEncoder(), col_encode_names_list)],
+                                         remainder='passthrough')
+            df_X = np.asarray(onehoted.fit_transform(col_encode_names_vals).toarray())
+            from collections import defaultdict
+            d = defaultdict(LabelEncoder)
+            # Encoding the variable
+            df_y = col_label_names_vals
+            df_yyy = df_y.apply(lambda x: d[x.name].fit_transform(x))
+            nono = np.array(col_no_label_names_vals)
+            full = np.concatenate((df_yyy, df_X, nono), axis=1)
+            dd = pd.DataFrame(data=full[1:, 1:], index=full[1:, 0], columns=full[0, 1:])
             context['xcols'] = xcols
             context['ycol'] = ycol
+            context['col_encode_names'] = col_encode_names
+            context['col_label_names'] = col_label_names
             context['missing'] = missing
             context['imputing'] = imputing
             context['trainingset_s'] = trainingset_s
@@ -218,11 +258,8 @@ class prepross(TemplateView, TransformerMixin):
             context['file_name'] = file_name
             context['row_count'] = row_count
             context['df'] = df
-
-            return render(request, 'dash/preprocessing.html', context)
-
-    def __str__(self):
-        return self.template_name
+            context['dd'] = dd
+        return self.render_to_response(context)
 
 
 # Profile

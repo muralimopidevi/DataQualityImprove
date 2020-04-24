@@ -30,14 +30,18 @@
     {% csrf_token %}
     <div class="table-responsive jumbotron">
         <h3> Select variables</h3>
-        <table class="table table-sm">
+        <table class="table table-sm" id="#">
+            <thead>
             <tr>
                 <th> Column Name </th>
                 <th> TYPE </th>
                 <th> NAN COUNT </th>
                 <th> DISTINCT COUNT </th>
-                <th> ASSIGN VARIABLE </th>
+                <th> SELECT ENCODER </th>
+                <th> SELECT DEPENDENT VAR ONE 'Y' </th>
             </tr>
+            </thead>
+            <tbody>
             {% for key, value, value2, value3 in file_type.itertuples %}
             <tr>
                 <td> {{ key }} </td>
@@ -60,14 +64,22 @@
                 <td> {{ value2 }} </td>
                 <td> {{ value3 }} </td>
                 <td>
+                    <select class="form-control col-md-8" name="encoding">
+                        <option value={{key}}:column_encoder> Column Encoder </option>
+                        <option value={{key}}:label_encoder> Label Encoder </option>
+                        <option value={{key}}:no_encoding> NOT APPLY </option>
+                    </select>
+                </td>
+                <td>
                     <select class="form-control col-md-8" name="assvar">
                         <option value={{key}}:X> X </option>
-                        <option value={{key}}:y> y </option>
-                        <option value={{key}}:no> Remove </option>
+                        <option value={{key}}:y> Y </option>
+                        <option value={{key}}:no> Remove Column </option>
                     </select>
                 </td>
             </tr>
             {% endfor %}
+            </tbody>
         </table>
         <div class="container-fluid">
             <div class="row">
@@ -137,6 +149,13 @@
         <div class="col-md-6">
             <h5><b>Test Set Size:</b> {{ testset_s }}%</h5>
         </div>
+        <hr>
+        <div class="col-md-6">
+            <h5><b>Col Trans:</b> {{ col_encode_names }}</h5>
+        </div>
+        <div class="col-md-6">
+            <h5><b>Label Trans:</b> {{ col_label_names }}</h5>
+        </div>
 
     </div>
 </div>
@@ -160,6 +179,24 @@
     </thead>
     <tbody>
     {% for _, data in df.iterrows %}
+    <tr>
+        {% for value in data %}
+        <td>{{ value | safe }}</td>
+        {% endfor %}
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+<table class="table table-responsive table-striped table-dark " width="100%"   cellspacing="0">
+    <thead>
+    <tr>
+        {% for columns in dd %}
+        <th>{{ columns | safe }}</th>
+        {% endfor %}
+    </tr>
+    </thead>
+    <tbody>
+    {% for _, data in dd.iterrows %}
     <tr>
         {% for value in data %}
         <td>{{ value | safe }}</td>

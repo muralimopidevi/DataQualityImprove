@@ -2,7 +2,8 @@
 .DS_Store
 #Pycharm
 .idea
-
+.idea/
+idea/
 #CSV
 
 #PDF
