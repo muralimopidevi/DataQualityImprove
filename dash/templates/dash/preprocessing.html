@@ -65,7 +65,7 @@
                 <td> {{ value3 }} </td>
                 <td>
                     <select class="form-control col-md-8" name="encoding">
-                        <option value={{key}}:column_encoder> Column Encoder </option>
+                        <option value={{key}}:column_encoder> One Hot Encoder </option>
                         <option value={{key}}:label_encoder> Label Encoder </option>
                         <option value={{key}}:no_encoding> NOT APPLY </option>
                     </select>
@@ -86,8 +86,8 @@
                 <div class="form-group col-md-4">
                     <div class="fileUpload">
                         <label> Missing values : </label>
-                        <select class="form-control" name="missingvalues">
-                            <option value='#'> ------------ </option>
+                        <select class="form-control" name="missingvalues" required>
+                            <option> </option>
                             <option value='Keep_NAN'>Keep Na Values</option>
                             <option value='Drop_NAN'>Drop Na Values</option>
                         </select>
@@ -96,8 +96,8 @@
                 <div class="form-group col-md-4">
                     <div class="fileUpload ">
                         <label> Imputate NaN Values With : </label>
-                        <select class="form-control" name="imputing">
-                            <option value='#'> ------------ </option>
+                        <select class="form-control" name="imputing" required>
+                            <option></option>
                             <option value='RDF'>Random Forest</option>
                             <option value='KNN'>KNN Imputer</option>
                             <option value='mean'>Mean</option>
@@ -113,6 +113,9 @@
                         <input class="form-control col-md-8" type="number" max="100" accuracy="1" min="0" name="trainingset_size" value="75" id="trainingset_size">
                     </div>
                 </div>
+
+
+
             </div>
         </div>
         <div class="fileUpload btn btn-primary">
@@ -172,6 +175,42 @@
 <table class="table table-responsive table-striped table-dark " width="100%"   cellspacing="0">
     <thead>
     <tr>
+        {% for columns in x_cols %}
+        <th>{{ columns | safe }}</th>
+        {% endfor %}
+    </tr>
+    </thead>
+    <tbody>
+    {% for _, data in x_cols.iterrows %}
+    <tr>
+        {% for value in data %}
+        <td>{{ value | safe }}</td>
+        {% endfor %}
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+<table class="table table-responsive table-striped table-dark " width="100%"   cellspacing="0">
+    <thead>
+    <tr>
+        {% for columns in y_col %}
+        <th>{{ columns | safe }}</th>
+        {% endfor %}
+    </tr>
+    </thead>
+    <tbody>
+    {% for _, data in y_col.iterrows %}
+    <tr>
+        {% for value in data %}
+        <td>{{ value | safe }}</td>
+        {% endfor %}
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+<table class="table table-responsive table-striped table-dark " width="100%"   cellspacing="0">
+    <thead>
+    <tr>
         {% for columns in df %}
         <th>{{ columns | safe }}</th>
         {% endfor %}
@@ -187,23 +226,6 @@
     {% endfor %}
     </tbody>
 </table>
-<table class="table table-responsive table-striped table-dark " width="100%"   cellspacing="0">
-    <thead>
-    <tr>
-        {% for columns in dd %}
-        <th>{{ columns | safe }}</th>
-        {% endfor %}
-    </tr>
-    </thead>
-    <tbody>
-    {% for _, data in dd.iterrows %}
-    <tr>
-        {% for value in data %}
-        <td>{{ value | safe }}</td>
-        {% endfor %}
-    </tr>
-    {% endfor %}
-    </tbody>
-</table>
 {% endif %}
+
 {% endblock content %}
