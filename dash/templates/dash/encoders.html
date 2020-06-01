@@ -1,0 +1,28 @@
+{% extends "dash/dash-base-temp.html" %}
+{% block content %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item "><a href="{% url 'upload' %}">Upload</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Select File</li>
+        <li class="breadcrumb-item active" aria-current="page">Select File</li>
+    </ol>
+</nav>
+<table class="table table-responsive table-striped table-dark " width="100%" id="dataTable"  cellspacing="0">
+    <thead>
+    <tr>
+        {% for columns in df %}
+        <th>{{ columns | safe }}</th>
+        {% endfor %}
+    </tr>
+    </thead>
+    <tbody>
+    {% for _, data in df.iterrows %}
+    <tr>
+        {% for value in data %}
+        <td>{{ value | safe }}</td>
+        {% endfor %}
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock content %}
