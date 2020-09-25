@@ -1,7 +1,7 @@
 ![PyPI - Python Version](https://img.shields.io/badge/Python-3.7-brightgreen)
 ![PyPI - Python Version](https://img.shields.io/badge/requirements.txt-updated-yellow)
 
-# Heuristic Problem of Stochastic Optimization
+# Data Preprocessing and Modeling Tool
 
 ## Purpose of Plan
 Data is a valuable resource in most companies, especially in this era of internet of things; although, Data in the real world (raw data) is usually dirty. Hence, the need to subject the data to several steps and
