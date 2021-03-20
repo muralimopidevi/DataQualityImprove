@@ -13,7 +13,7 @@ et-xmlfile==1.0.1
 folium==0.10.1
 idna==2.9
 jdcal==1.4.1
-Jinja2==2.11.2
+Jinja2==2.11.3
 joblib==0.14.1
 MarkupPy==1.14
 MarkupSafe==1.1.1
