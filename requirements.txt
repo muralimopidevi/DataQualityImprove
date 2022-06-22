@@ -18,7 +18,7 @@ joblib==0.14.1
 MarkupPy==1.14
 MarkupSafe==1.1.1
 missingpy==0.2.0
-numpy==1.18.3
+numpy==1.22.0
 odfpy==1.4.1
 openpyxl==3.0.3
 panda==0.3.1
